@@ -17,3 +17,5 @@ export class apiError extends Error{
 
     }
 }
+
+export const DB_NAME = "videotube"
