@@ -1,5 +1,5 @@
 
-export class apiError extends Error{
+ class apiError extends Error{
     constructor(
         statusCode,
         message= "Something went wrong",
@@ -13,9 +13,12 @@ export class apiError extends Error{
         this.success = false;
         this.errors = errors
 
-
-
+        if(stack){
+            this.stack = stack
+        }else {
+            Error.captureStackTrace(this,this.constructor)
+        }
     }
 }
 
-export const DB_NAME = "videotube"
+export {apiError};

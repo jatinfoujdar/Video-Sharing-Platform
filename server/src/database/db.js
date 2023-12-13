@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
-
-import { DB_NAME } from "../utils/apiError.js";
-
+import { DB_NAME } from "../constant.js";
 
 const connectDB = async () => {
     try {
@@ -15,4 +13,4 @@ const connectDB = async () => {
     }
 }
 
-export default connectDB
+export default connectDB;
