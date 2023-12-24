@@ -1,3 +1,4 @@
+import { User } from "../schema/userSchema.js";
 import { apiError } from "../utils/apiError.js";
 import {asyncHandler} from "../utils/asyncHandler.js";
 
@@ -17,6 +18,19 @@ export const registerUser = asyncHandler(async (req, res) => {
     ){
         throw new apiError(400,"All Fields are required")
     }
+   const exiestedUser = User.findOne({
+        $or:[{email},{username}]
+    })
+    if(exiestedUser){
+        throw new apiError(409, "User Already exists")
+    }
+
+     const avatarLocalPath = req.files?.avatar[0]?.path;
+     const coverImageLocalPath = req.file?.coverImage[0]?.path;
+
+     if(!avatarLocalPath){
+       throw new apiError(400, " Avatar file is required")
+     }
 
 });
 
