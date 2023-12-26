@@ -1,6 +1,7 @@
 import { User } from "../schema/userSchema.js";
 import { apiError } from "../utils/apiError.js";
 import {asyncHandler} from "../utils/asyncHandler.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 
 
@@ -31,6 +32,22 @@ export const registerUser = asyncHandler(async (req, res) => {
      if(!avatarLocalPath){
        throw new apiError(400, " Avatar file is required")
      }
+
+    const avatar = await uploadOnCloudinary(avatarLocalPath)
+    const coverImage = await uploadOnCloudinary(coverImageLocalPath)
+
+    if(!avatar){
+        throw new apiError(400, " Avatar file is required")
+    }
+
+    User.create({
+        fullName,
+        avatar: avatar.url,
+        coverImage: coverImage?.url || "",
+        email,
+        password,
+        username: username.toLowerCase()
+    })
 
 });
 
