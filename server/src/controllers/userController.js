@@ -1,5 +1,6 @@
 import { User } from "../schema/userSchema.js";
 import { apiError } from "../utils/apiError.js";
+import { apiResponse } from "../utils/apiResponse.js";
 import {asyncHandler} from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
@@ -40,14 +41,26 @@ export const registerUser = asyncHandler(async (req, res) => {
         throw new apiError(400, " Avatar file is required")
     }
 
-    User.create({
+    const user = await User.create({
         fullName,
         avatar: avatar.url,
         coverImage: coverImage?.url || "",
         email,
         password,
         username: username.toLowerCase()
-    })
+    })  
+
+    const createdUser = await User.findById(user._id).select(
+        "-password -refreshToken"
+    )
+    if(!createdUser){
+        throw new apiError(500,"Something went wrong while creating the user")
+    }
+
+    return res.status(201).json(
+        new apiResponse(200, createdUser, "User registred successfully")
+    )
+
 
 });
 
